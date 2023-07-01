@@ -1,6 +1,8 @@
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import { StrictMode } from 'react';
+// import siteData from 'docuit:site-data';
+import { BrowserRouter } from 'react-router-dom';
 
 function renderInBrowser() {
   const containerEl = document.getElementById('docuit-app');
@@ -9,7 +11,9 @@ function renderInBrowser() {
   }
   createRoot(containerEl).render(
     <StrictMode>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </StrictMode>
   );
 }

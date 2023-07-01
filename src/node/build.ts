@@ -1,20 +1,26 @@
-import { build as viteBuild } from 'vite';
+import { build as viteBuild, InlineConfig } from 'vite';
+import type { RollupOutput } from 'rollup';
 import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from './constants';
-import pluginReact from '@vitejs/plugin-react';
-import { InlineConfig } from 'vite';
 import path from 'path';
 import fs from 'fs-extra';
-import { pathToFileURL } from 'url';
+// import ora from 'ora';
+import { pluginConfig } from './plugin-docuit/config';
+import { SiteConfig } from 'shared/types';
+import pluginReact from '@vitejs/plugin-react';
 
-export async function bundle(root: string) {
+export async function bundle(root: string, config: SiteConfig) {
   const resolveViteConfig = (isServer: boolean): InlineConfig => ({
     mode: 'production',
     root,
-    // 注意加上这个插件，自动注入 import React from 'react'，避免 React is not defined 的错误
-    plugins: [pluginReact()],
+    plugins: [pluginReact(), pluginConfig(config)],
+    ssr: {
+      // 注意加上这个配置，防止 cjs 产物中 require ESM 的产物，因为 react-router-dom 的产物为 ESM 格式
+      noExternal: ['react-router-dom']
+    },
     build: {
+      minify: false,
       ssr: isServer,
-      outDir: isServer ? '.temp' : 'build',
+      outDir: isServer ? path.join(root, '.temp') : 'build',
       rollupOptions: {
         input: isServer ? SERVER_ENTRY_PATH : CLIENT_ENTRY_PATH,
         output: {
@@ -33,31 +39,35 @@ export async function bundle(root: string) {
       // server build
       viteBuild(resolveViteConfig(true))
     ]);
-    return [clientBundle, serverBundle];
+    return [clientBundle, serverBundle] as [RollupOutput, RollupOutput];
   } catch (e) {
-    console.warn(e);
+    console.warn('resolveViteConfig内报错：', e);
     return []; // 解决报错
   }
 }
-
-export async function build(root: string = process.cwd()) {
-  const [clientBundle, serverBundle] = await bundle(root);
-  // 引入 ssr 入口模块
+export async function build(root: string = process.cwd(), config: SiteConfig) {
+  // 1. bundle - client 端 + server 端
+  const [clientBundle] = await bundle(root, config);
+  // 2. 引入 server-entry 模块
   const serverEntryPath = path.join(root, '.temp', 'ssr-entry.js');
-  // const { render } = await import(serverEntryPath);
 
-  const { render } = await import(pathToFileURL(serverEntryPath).toString());
-
-  await renderPage(render, root, clientBundle);
+  console.log(serverEntryPath);
+  const { render } = await import('file://' + serverEntryPath); // 'file://'   ???
+  // 3. 服务端渲染，产出 HTML
+  try {
+    await renderPage(render, root, clientBundle);
+  } catch (e) {
+    console.log('Render page error.\n', e);
+  }
 }
 
 export async function renderPage(
   render: () => string,
   root: string,
-  clientBundle: any // RollupOutput
+  clientBundle: RollupOutput
 ) {
   const clientChunk = clientBundle.output.find(
-    (chunk: any) => chunk.type === 'chunk' && chunk.isEntry
+    (chunk) => chunk.type === 'chunk' && chunk.isEntry
   );
   console.log('Rendering page in server side...');
   const appHtml = render();
@@ -79,5 +89,3 @@ export async function renderPage(
   await fs.writeFile(path.join(root, 'build/index.html'), html);
   await fs.remove(path.join(root, '.temp'));
 }
-
-const dynamicImport = new Function('m', 'return import(m)');
