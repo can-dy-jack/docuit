@@ -155,6 +155,7 @@
 
 :root {
     --docuit-layout-max-width: 1440px;
+    --docuit-aside-width: 268px;
 }
 
 /**

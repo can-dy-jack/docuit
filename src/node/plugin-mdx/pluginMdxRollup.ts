@@ -7,7 +7,8 @@ import remarkPluginMDXFrontMatter from 'remark-mdx-frontmatter';
 import remarkPluginFrontmatter from 'remark-frontmatter';
 import { rehypePluginPreWrapper } from './rehypePlugins/preWrapper';
 import { rehypePluginShiki } from './rehypePlugins/shiki';
-import { remarkPluginToc } from './remarkPlugins/TOC';
+import { remarkPluginToc } from './remarkPlugins/toc';
+// import remarkPluginToc from 'remark-toc';
 import shiki from 'shiki';
 
 export async function pluginMdxRollup(): Promise<Plugin> {
@@ -15,8 +16,13 @@ export async function pluginMdxRollup(): Promise<Plugin> {
     remarkPlugins: [
       remarkPluginGFM,
       remarkPluginFrontmatter,
-      [remarkPluginMDXFrontMatter, { name: 'frontmatter' }],
-      remarkPluginToc
+      remarkPluginToc,
+      [
+        remarkPluginMDXFrontMatter,
+        {
+          name: 'frontmatter'
+        }
+      ]
     ],
     rehypePlugins: [
       rehypePluginSlug,

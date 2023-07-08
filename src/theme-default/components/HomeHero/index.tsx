@@ -9,7 +9,8 @@ export function HomeHero(props: { hero: Hero }) {
       <div flex="~" className="max-w-1152px" m="auto">
         <div text="left" flex="~ col" className="max-w-592px">
           <h1 font="bold" text="6xl" className="max-w-576px">
-            <span className={styles.clip}>{hero.name}</span>
+            {/* <span className={styles.clip + " fancy-color"}>{hero.name}</span> */}
+            <span className="fancy-color">{hero.name}</span>
           </h1>
           <p text="6xl" font="bold" className="max-w-576px">
             {hero.text}
@@ -36,8 +37,13 @@ export function HomeHero(props: { hero: Hero }) {
           </div>
         </div>
         {hero.image && (
-          <div w="max-96" h="max-96" flex="center" m="auto">
-            <img src={hero.image.src} alt={hero.image.alt} />
+          <div flex="center" m="auto">
+            <img
+              src={hero.image.src}
+              alt={hero.image.alt}
+              width="200"
+              height="200"
+            />
           </div>
         )}
       </div>

@@ -8,7 +8,7 @@ import rehypeStringify from 'rehype-stringify';
 import { rehypePluginPreWrapper } from '../plugin-mdx/rehypePlugins/preWrapper';
 import { rehypePluginShiki } from '../plugin-mdx/rehypePlugins/shiki';
 import shiki from 'shiki';
-import { remarkPluginToc } from '../plugin-mdx/remarkPlugins/TOC';
+import { remarkPluginToc } from '../plugin-mdx/remarkPlugins/toc';
 
 describe('Markdown compile cases', async () => {
   // 初始化 processor
@@ -67,25 +67,25 @@ describe('Markdown compile cases', async () => {
     const result = remarkProcessor.processSync(mdContent);
     expect(result.value.toString().replace(mdContent, ''))
       .toMatchInlineSnapshot(`
-      "
-      export const toc = [
-        {
-          \\"id\\": \\"h2-code\\",
-          \\"text\\": \\"h2 code\\",
-          \\"depth\\": 2
-        },
-        {
-          \\"id\\": \\"h3-link\\",
-          \\"text\\": \\"h3 link\\",
-          \\"depth\\": 3
-        },
-        {
-          \\"id\\": \\"h4\\",
-          \\"text\\": \\"h4\\",
-          \\"depth\\": 4
-        }
-      ];
-      "
-    `);
+        "
+        export const toc = [
+          {
+            \\"id\\": \\"h2-code\\",
+            \\"text\\": \\"h2 code\\",
+            \\"depth\\": 2
+          },
+          {
+            \\"id\\": \\"h3-link\\",
+            \\"text\\": \\"h3 link\\",
+            \\"depth\\": 3
+          },
+          {
+            \\"id\\": \\"h4\\",
+            \\"text\\": \\"h4\\",
+            \\"depth\\": 4
+          }
+        ];
+        "
+      `);
   });
 });

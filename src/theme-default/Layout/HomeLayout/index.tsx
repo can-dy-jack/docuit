@@ -1,6 +1,6 @@
 import { usePageData } from '@runtime';
-import { HomeHero } from '../HomeHero/index';
-import { HomeFeature } from '../HomeFeature/index';
+import { HomeHero } from '../../components/HomeHero';
+import { HomeFeature } from '../../components/HomeFeature';
 
 export function HomeLayout() {
   const { frontmatter } = usePageData();

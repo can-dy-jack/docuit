@@ -1,9 +1,12 @@
 import { usePageData } from '../../runtime';
 import { Nav } from '../components/Nav';
-import { HomeLayout } from '../components/HomeLayout';
+import { HomeLayout } from './HomeLayout';
+import { DocLayout } from './DocLayout';
 import 'uno.css';
 import '../style/base.css';
 import '../style/vars.css';
+import '../style/animation.css';
+import '../style/doc.css';
 
 export function Layout() {
   const pageData = usePageData();
@@ -12,7 +15,7 @@ export function Layout() {
     if (pageType === 'home') {
       return <HomeLayout />;
     } else if (pageType === 'doc') {
-      return <div>正文页面</div>;
+      return <DocLayout />;
     } else {
       return <div>404 页面</div>;
     }
@@ -20,7 +23,13 @@ export function Layout() {
   return (
     <div>
       <Nav />
-      {getContent()}
+      <section
+        style={{
+          paddingTop: 'var(--docuit-nav-height)'
+        }}
+      >
+        {getContent()}
+      </section>
     </div>
   );
 }

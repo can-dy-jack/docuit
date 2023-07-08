@@ -3,6 +3,9 @@ import { Plugin } from 'vite';
 import { SiteConfig } from '../../shared/types/index';
 import { ViteDevServer } from 'vite';
 import { PACKAGE_ROOT } from '../../node/constants';
+import sirv from 'sirv';
+import path from 'path';
+import fs from 'fs';
 
 const SITE_DATA_ID = 'docuit:site-data';
 
@@ -13,9 +16,9 @@ export function pluginConfig(
   let server: ViteDevServer | null = null;
   return {
     name: 'dcuit:config',
-    configureServer(s) {
-      server = s;
-    },
+    // configureServer(s) {
+    //   server = s;
+    // },
     resolveId(id) {
       if (id === SITE_DATA_ID) {
         return '\0' + SITE_DATA_ID;
@@ -55,6 +58,10 @@ export function pluginConfig(
           }
         }
       };
+    },
+    configureServer(server) {
+      const publicDir = join(config.root, 'public');
+      server.middlewares.use(sirv(publicDir));
     }
   };
 }

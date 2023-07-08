@@ -19,3 +19,14 @@
         color: var(--docuit-c-text-1);
     }
 }
+.nav {
+    padding-left: max(
+      32px,
+      calc(32px + (100vw - var(--docuit-layout-max-width)) / 2)
+    );
+    padding-right: max(
+      32px,
+      calc(32px + (100vw - var(--docuit-layout-max-width)) / 2)
+    );
+    background-color: var(--docuit-c-bg);
+}

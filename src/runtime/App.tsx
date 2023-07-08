@@ -1,4 +1,3 @@
-// app.tsx
 import { routes } from 'docuit:routes';
 import { matchRoutes } from 'react-router-dom';
 import { PageData } from 'shared/types';
@@ -12,12 +11,15 @@ export async function initPageData(routePath: string): Promise<PageData> {
   if (matched) {
     // Preload route component
     const moduleInfo = await matched[0].route.preload();
-    console.log(moduleInfo);
+
+    console.log(moduleInfo.toc);
+
     return {
       pageType: moduleInfo.frontmatter?.pageType ?? 'doc',
       siteData,
       frontmatter: moduleInfo.frontmatter,
-      pagePath: routePath
+      pagePath: routePath,
+      toc: moduleInfo.toc
     };
   }
   return {
