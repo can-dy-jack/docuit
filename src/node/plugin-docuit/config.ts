@@ -21,6 +21,11 @@ export function pluginConfig(
         return '\0' + SITE_DATA_ID;
       }
     },
+    css: {
+      modules: {
+        localsConvention: 'camelCaseOnly'
+      }
+    },
     load(id) {
       if (id === '\0' + SITE_DATA_ID) {
         return `export default ${JSON.stringify(config.siteData)}`;
