@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc -w",
-    "start": "tsup --watch",
+    "dev": "tsup --watch",
     "build": "tsup"
   },
   "bin": {

@@ -31,7 +31,17 @@ export interface Footer {
 
 export interface UserConfig {
   title?: string;
+  /**
+   * 描述
+   */
   description?: string;
   themeConfig?: ThemeConfig;
   vite?: ViteConfiguration;
 }
+
+export interface SiteConfig {
+  root: string;
+  configPath: string;
+  siteData: UserConfig;
+}
+
