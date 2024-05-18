@@ -16,6 +16,15 @@ function getUserConfigPath(root: string) {
   }
 }
 
+// 三种情况:
+// 1. object
+// 2. promise
+// 3. function
+type RawConfig =
+  | UserConfig
+  | Promise<UserConfig>
+  | (() => UserConfig | Promise<UserConfig>);
+
 export async function resolveConfig(
   root: string,
   command: 'serve' | 'build',
@@ -31,10 +40,6 @@ export async function resolveConfig(
   
   if (result) {
     const { config: rawConfig = {} as RawConfig } = result;
-    // 三种情况:
-    // 1. object
-    // 2. promise
-    // 3. function
     const userConfig = await (typeof rawConfig === 'function'
       ? rawConfig()
       : rawConfig);
