@@ -1,6 +1,8 @@
 import { relative } from 'path';
 import { Plugin } from 'vite';
 import { SiteConfig } from 'shared/types/index';
+import { PACKAGE_ROOT } from '../../node/constants';
+import { join } from 'path';
 
 const SITE_DATA_ID = 'docuit:site-data';
 
@@ -33,6 +35,17 @@ export function pluginConfig(
         // 重启 Dev Server
         await restartServer();
       }
-    }
+    },
+    // 新增插件钩子
+    config() {
+      return {
+        root: PACKAGE_ROOT,
+        resolve: {
+          alias: {
+            '@runtime': join(PACKAGE_ROOT, 'src', 'runtime', 'index.ts')
+          }
+        }
+      };
+    },
   };
 }

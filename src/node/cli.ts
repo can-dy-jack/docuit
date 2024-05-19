@@ -2,6 +2,7 @@ import { cac } from "cac";
 // import { createDevServer } from "./dev";
 import { build } from "./build";
 const path = require('node:path'); 
+import { resolveConfig } from './config';
 
 const version = require("../../package.json").version;
 
@@ -24,8 +25,9 @@ cli
   .command("build [root]", "build for production")
   .action(async (root: string) => {
     const pos = root ? path.resolve(root) : process.cwd();
+    const config = await resolveConfig(root, 'build', 'production');
     try {
-      await build(pos);
+      await build(pos, config);
     } catch(e) {
       console.log(e)
     }
